@@ -1,0 +1,7 @@
+{
+    "/api": {
+      "target": "http://express-server:3000",
+      "secure": false,
+      "pathRewrite": {"^/api" : ""}
+    }
+  }

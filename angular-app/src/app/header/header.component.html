@@ -1,0 +1,6 @@
+<div>Full Stack App</div>
+<div>
+    <span *ngIf="isAuthenticated" class="username">{{authService.currentUser}}</span>
+    <button *ngIf="!isAuthenticated" (click)="onSignInClicked()">Sign In</button>
+    <button *ngIf="isAuthenticated" (click)="onSignOutClicked()">Sign Out</button>
+</div>
