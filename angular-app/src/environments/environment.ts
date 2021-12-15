@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   keycloak: {
-    baseUrl: 'http://localhost:8080/auth',
+    baseUrl: '/auth',
     realm: 'full-stack',
     clientId: 'angular-app'
   }

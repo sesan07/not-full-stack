@@ -1,24 +1,24 @@
 services:
+  nginx-proxy:
+    # restart: always
+    build:
+      context: ./nginx-proxy
+      dockerfile: prod.Dockerfile
+    ports:
+      - 80:80
   angular-app:
     restart: always
     build:
       context: ./angular-app
-    ports:
-      - 4200:4200
-    volumes:
-    # Use cached: when the host performs changes, the container is in read only mode.
-    # Use delegated: when docker container performs changes, host is in read only mode.
-    # Use default: When both container and host actively and continuously perform changes on
-      - ./angular-app/src:/app/src:cached
+      dockerfile: prod.Dockerfile
+    # ports:
+      # - 80:80
   express-server:
     restart: always
     build:
       context: ./express-server
-    ports:
-      - 3000:3000
-    volumes:
-      - ./express-server/db:/app/db:cached
-      - ./express-server/app.js:/app/app.js:cached
+    # ports:
+    #   - 3000:3000
     environment:
       - ATLAS_URI=${ATLAS_URI}
       - REALM=${REALM}
@@ -31,10 +31,8 @@ services:
     restart: always
     build:
       context: ./keycloak
-    ports:
-      - 8080:8080
-    volumes:
-      - ./keycloak/full-stack-realm-import.json:/tmp/full-stack-realm-import.json:cached
+    # ports:
+    #   - 8080:8080
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_USER}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}

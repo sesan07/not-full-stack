@@ -5,13 +5,13 @@
     "clients": [
       {
         "clientId": "angular-app",
-        "rootUrl": "http://localhost:4200/",
+        "rootUrl": "http://localhost/",
         "enabled": true,
         "redirectUris": [
-            "http://localhost:4200/*"
+            "http://localhost/*"
         ],
         "webOrigins": [
-            "http://localhost:4200"
+            "http://localhost"
         ],
         "publicClient": true,
         "protocolMappers": [
