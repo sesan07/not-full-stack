@@ -8,17 +8,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { initializeKeycloak } from './auth/utils';
 import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    HomeComponent,
+    UserManagementComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

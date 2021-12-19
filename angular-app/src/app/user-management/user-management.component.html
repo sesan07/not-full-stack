@@ -1,0 +1,19 @@
+<div class="user-list-container">
+	<button class="add-user-btn">Add new user</button>
+	<ul class="user-list">
+		<li class="user-list-item" *ngFor="let user of users" (click)="onUserClicked(user)">{{ user.user_name }}</li>
+	</ul>
+</div>
+	
+<form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+	<div>
+		<label class="form-label" for="user_name">User name: </label>
+		<input id="user_name" type="text" formControlName="user_name" required>
+	</div>
+	<div>
+		<label class="form-label" for="email">Email: </label>
+		<input id="email" type="text" formControlName="email">
+	</div>
+  
+	<button class="form-add-btn" type="submit" [disabled]="!userForm.valid">{{ isUpdating ? 'Update user' : 'Add user' }}</button>
+</form>

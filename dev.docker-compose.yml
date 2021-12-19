@@ -7,7 +7,7 @@ services:
     ports:
       - 80:80
   angular-app:
-    restart: always
+    # restart: always
     build:
       context: ./angular-app
       dockerfile: dev.Dockerfile
@@ -19,29 +19,48 @@ services:
     # Use default: When both container and host actively and continuously perform changes on
       - ./angular-app/src:/app/src:cached
   express-server:
-    restart: always
+    # restart: always
     build:
       context: ./express-server
     # ports:
     #   - 3000:3000
     volumes:
-      - ./express-server/db:/app/db:cached
-      - ./express-server/app.js:/app/app.js:cached
+      - ./express-server/src:/app/src:cached
     environment:
-      - ATLAS_URI=${ATLAS_URI}
       - REALM=${REALM}
       - CLIENT_ID=${CLIENT_ID}
       - AUTH_SERVER_URL=${AUTH_SERVER_URL}
       - DOCKER_AUTH_SERVER_URL=${DOCKER_AUTH_SERVER_URL}
       - BEARER_ONLY=${BEARER_ONLY}
       - VERIFY_TOKEN_AUDIENCE=${VERIFY_TOKEN_AUDIENCE}
+      - PGHOST=${POSTGRES_HOST}
+      - PGPORT=${POSTGRES_PORT}
+      - PGUSER=${POSTGRES_DEV_USER}
+      - PGPASSWORD=${POSTGRES_DEV_PASSWORD}
+      - PGDATABASE=${POSTGRES_DEV_DATABASE}
   keycloak:
-    restart: always
+    # restart: always
     build:
       context: ./keycloak
+    depends_on:
+      - postgres
     # ports:
     #   - 8080:8080
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_USER}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
       - KEYCLOAK_IMPORT=${KEYCLOAK_IMPORT}
+      - DB_VENDOR=${KEYCLOAK_DB_VENDOR}
+      - DB_ADDR=${POSTGRES_HOST}
+      - DB_USER=${POSTGRES_KEYCLOAK_USER}
+      - DB_PASSWORD=${POSTGRES_KEYCLOAK_PASSWORD}
+      - DB_DATABASE=${POSTGRES_KEYCLOAK_DATABASE}
+  postgres:
+    # restart: always
+    build:
+      context: ./postgres
+    # ports:
+    #   - 8080:8080
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

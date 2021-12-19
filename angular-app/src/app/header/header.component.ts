@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -6,25 +8,31 @@ import { AuthService } from '../auth/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   
   isAuthenticated: boolean = false;
 
-  constructor(public authService: AuthService) {
-}
+  private _destroy$: Subject<void> = new Subject();
+
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated.subscribe(isAuth => this.isAuthenticated = isAuth);
+    this.authService.isAuthenticated
+		.pipe(takeUntil(this._destroy$))
+		.subscribe(isAuth => this.isAuthenticated = isAuth);
   }
 
-  onSignInClicked(): void {
-    console.log('sign in clicked!')
+  ngOnDestroy(): void {
+	  this._destroy$.next();
+	  this._destroy$.complete();
+  }
+
+  onLogInClicked(): void {
     this.authService.logIn();
   }
 
-  onSignOutClicked(): void {
-    console.log('sign out clicked!')
-    this.authService.logOut();
+  onLogOutClicked(): void {
+	this.authService.logOut();
   }
 
 }

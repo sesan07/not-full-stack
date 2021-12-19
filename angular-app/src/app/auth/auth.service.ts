@@ -14,6 +14,8 @@ export class AuthService {
   currentUser: string | undefined = undefined;
 
   private _isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _loginRedirectPath: string = window.location.origin + '/user-management';
+  private _logoutRedirectPath: string = window.location.origin + '';
 
   constructor(private readonly _keycloakService: KeycloakService) {
     from(_keycloakService.isLoggedIn())
@@ -36,11 +38,11 @@ export class AuthService {
   }
 
   logIn(): void {
-    this._keycloakService.login();
+    this._keycloakService.login({ redirectUri: this._loginRedirectPath });
   }
 
   logOut(): void {
-    this._keycloakService.logout();
+    this._keycloakService.logout(this._logoutRedirectPath);
   }
 
   private _onKeycloakEvent(event: KeycloakEvent): void {

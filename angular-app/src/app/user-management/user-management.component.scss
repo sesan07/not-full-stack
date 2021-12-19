@@ -1,0 +1,52 @@
+:host {
+	display: flex;
+	column-gap: 16px;
+	padding: 32px;
+}
+
+.user-list-container {
+	flex-basis: 200px;
+	padding: 16px;
+	box-sizing: border-box;
+	text-align: center;
+	border: 1px solid;
+	border-radius: 16px;
+}
+
+.add-user-btn {
+	margin-bottom: 8px;
+}
+
+.user-list {
+	display: flex;
+	flex-direction: column;
+	row-gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.user-list-item {
+	padding: 8px;
+	cursor: pointer;
+}
+
+.user-list-item:hover {
+	background-color: aquamarine;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: 8px;
+	padding: 16px;
+	box-sizing: border-box;
+	border: 1px solid;
+	border-radius: 16px;
+}
+
+.form-label {
+	display: inline-block;
+	min-width: 100px;
+}
