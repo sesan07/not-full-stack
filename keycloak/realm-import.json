@@ -52,26 +52,5 @@
             "account": ["view-profile"]
         }
       }
-    ],
-    "roles": {
-      "realm": [
-        {
-          "name": "user"
-        },
-        {
-          "name": "default-roles-full-stack",
-          "composite": true,
-          "composites": {
-            "realm": [
-              "user"
-            ],
-            "client": {
-              "account": [
-                "view-profile"
-              ]
-            }
-          }
-        }
-      ]
-    }
+    ]
   }

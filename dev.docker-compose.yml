@@ -1,13 +1,11 @@
 services:
   nginx-proxy:
-    # restart: always
     build:
       context: ./nginx-proxy
       dockerfile: dev.Dockerfile
     ports:
       - 80:80
   angular-app:
-    # restart: always
     build:
       context: ./angular-app
       dockerfile: dev.Dockerfile
@@ -19,9 +17,7 @@ services:
     # Use default: When both container and host actively and continuously perform changes on
       - ./angular-app/src:/app/src:cached
   express-server:
-    # restart: always
-    build:
-      context: ./express-server
+    build: ./express-server
     # ports:
     #   - 3000:3000
     volumes:
@@ -30,18 +26,16 @@ services:
       - REALM=${REALM}
       - CLIENT_ID=${CLIENT_ID}
       - AUTH_SERVER_URL=${AUTH_SERVER_URL}
-      - DOCKER_AUTH_SERVER_URL=${DOCKER_AUTH_SERVER_URL}
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
       - BEARER_ONLY=${BEARER_ONLY}
       - VERIFY_TOKEN_AUDIENCE=${VERIFY_TOKEN_AUDIENCE}
-      - PGHOST=${POSTGRES_HOST}
+      - PGHOST=${POSTGRES_HOST_NAME}
       - PGPORT=${POSTGRES_PORT}
       - PGUSER=${POSTGRES_DEV_USER}
       - PGPASSWORD=${POSTGRES_DEV_PASSWORD}
       - PGDATABASE=${POSTGRES_DEV_DATABASE}
   keycloak:
-    # restart: always
-    build:
-      context: ./keycloak
+    build: ./keycloak
     depends_on:
       - postgres
     # ports:
@@ -51,16 +45,58 @@ services:
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
       - KEYCLOAK_IMPORT=${KEYCLOAK_IMPORT}
       - DB_VENDOR=${KEYCLOAK_DB_VENDOR}
-      - DB_ADDR=${POSTGRES_HOST}
+      - DB_ADDR=${POSTGRES_HOST_NAME}
       - DB_USER=${POSTGRES_KEYCLOAK_USER}
       - DB_PASSWORD=${POSTGRES_KEYCLOAK_PASSWORD}
       - DB_DATABASE=${POSTGRES_KEYCLOAK_DATABASE}
   postgres:
-    # restart: always
-    build:
-      context: ./postgres
+    build: ./postgres
     # ports:
     #   - 8080:8080
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DEV_USER=${POSTGRES_DEV_USER}
+      - POSTGRES_DEV_PASSWORD=${POSTGRES_DEV_PASSWORD}
+      - POSTGRES_DEV_DATABASE=${POSTGRES_DEV_DATABASE}
+      - POSTGRES_KEYCLOAK_USER=${POSTGRES_KEYCLOAK_USER}
+      - POSTGRES_KEYCLOAK_PASSWORD=${POSTGRES_KEYCLOAK_PASSWORD}
+      - POSTGRES_KEYCLOAK_DATABASE=${POSTGRES_KEYCLOAK_DATABASE}
+      - POSTGRES_LOGSTASH_USER=${POSTGRES_LOGSTASH_USER}
+      - POSTGRES_LOGSTASH_PASSWORD=${POSTGRES_LOGSTASH_PASSWORD}
+  elasticsearch:
+    build: ./elasticsearch
+    # ports:
+    #   - "9200:9200"
+    #   - "9300:9300"
+    environment:
+      - ELASTIC_USERNAME=$ELASTICSEARCH_USER
+      - ELASTIC_PASSWORD=$ELASTICSEARCH_PASSWORD
+      - ELASTICSEARCH_CA_PASSWORD=$ELASTICSEARCH_CA_PASSWORD
+      - ELASTICSEARCH_CERT_PASSWORD=$ELASTICSEARCH_CERT_PASSWORD
+  kibana:
+    build: ./kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    environment:
+      # - SERVER_BASEPATH=/kibana
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
+      - ELASTICSEARCH_USERNAME=$ELASTICSEARCH_USER
+      - ELASTICSEARCH_PASSWORD=$ELASTICSEARCH_PASSWORD
+  logstash:
+    build: ./logstash
+    depends_on:
+      - elasticsearch
+      - postgres
+    # ports:
+    #   - "9600:9600"
+    environment:
+      - POSTGRES_JDBC_URL=${POSTGRES_JDBC_URL}
+      - POSTGRES_LOGSTASH_USER=${POSTGRES_LOGSTASH_USER}
+      - POSTGRES_LOGSTASH_PASSWORD=${POSTGRES_LOGSTASH_PASSWORD}
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - XPACK_MONITORING_ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
+      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=$ELASTICSEARCH_USER
+      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=$ELASTICSEARCH_PASSWORD

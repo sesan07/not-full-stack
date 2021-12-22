@@ -12,5 +12,6 @@ RUN npm i
 
 # EXPOSE 4200
 
+# TODO use entrypoint instead
 # Specify that the default command should be npm start
 CMD [ "npm", "start" ]
