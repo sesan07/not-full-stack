@@ -5,6 +5,7 @@ services:
       dockerfile: dev.Dockerfile
     ports:
       - 80:80
+      - 443:443
   angular-app:
     build:
       context: ./angular-app
@@ -18,6 +19,8 @@ services:
       - ./angular-app/src:/app/src:cached
   express-server:
     build: ./express-server
+    depends_on:
+      - keycloak
     # ports:
     #   - 3000:3000
     volumes:
@@ -25,8 +28,8 @@ services:
     environment:
       - REALM=${REALM}
       - CLIENT_ID=${CLIENT_ID}
-      - AUTH_SERVER_URL=${AUTH_SERVER_URL}
       - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_EXTERNAL_URL=${KEYCLOAK_EXTERNAL_URL}
       - BEARER_ONLY=${BEARER_ONLY}
       - VERIFY_TOKEN_AUDIENCE=${VERIFY_TOKEN_AUDIENCE}
       - PGHOST=${POSTGRES_HOST_NAME}
@@ -40,6 +43,7 @@ services:
       - postgres
     # ports:
     #   - 8080:8080
+    #   - 8443:8443
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_USER}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
@@ -78,10 +82,10 @@ services:
     build: ./kibana
     depends_on:
       - elasticsearch
-    ports:
-      - "5601:5601"
+    # ports:
+    #   - "5601:5601"
     environment:
-      # - SERVER_BASEPATH=/kibana
+      - SERVER_BASEPATH=/kibana
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
       - ELASTICSEARCH_USERNAME=$ELASTICSEARCH_USER
       - ELASTICSEARCH_PASSWORD=$ELASTICSEARCH_PASSWORD

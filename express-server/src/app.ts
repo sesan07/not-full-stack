@@ -27,12 +27,12 @@ async function setupKeycloak() {
 
 	console.log('Setting up keycloak...');
 	try {
-		const response = await axios.get(process.env.KEYCLOAK_URL + '/realms/' + process.env.REALM);
+		const realmResponse = await axios.get(process.env.KEYCLOAK_URL + '/realms/' + process.env.REALM);
 		const keycloakConfig = {
 			realm: process.env.REALM,
-			realmPublicKey: response.data.public_key,
+			realmPublicKey: realmResponse.data.public_key,
 			clientId: process.env.CLIENT_ID,
-			authServerUrl: process.env.AUTH_SERVER_URL,
+			authServerUrl: process.env.KEYCLOAK_EXTERNAL_URL,
 			bearerOnly: process.env.BEARER_ONLY,
 			verifyTokenAudience: process.env.VERIFY_TOKEN_AUDIENCE
 		};

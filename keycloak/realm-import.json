@@ -2,16 +2,17 @@
     "id": "full-stack",
     "realm": "full-stack",
     "enabled": true,
+	"sslRequired": "all",
     "clients": [
       {
         "clientId": "angular-app",
-        "rootUrl": "http://localhost/",
+        "rootUrl": "https://localhost/",
         "enabled": true,
         "redirectUris": [
-            "http://localhost/*"
+            "https://localhost/*"
         ],
         "webOrigins": [
-            "http://localhost"
+            "https://localhost"
         ],
         "publicClient": true,
         "protocolMappers": [
