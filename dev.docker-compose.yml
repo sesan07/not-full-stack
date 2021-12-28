@@ -1,3 +1,6 @@
+version: "3.8"
+
+# TODO set up volumes for postgres to persist data?
 services:
   nginx-proxy:
     build:
@@ -10,8 +13,8 @@ services:
     build:
       context: ./angular-app
       dockerfile: dev.Dockerfile
-    # ports:
-    #   - 4200:4200
+    ports:
+      - 4200:4200
     volumes:
     # Use cached: when the host performs changes, the container is in read only mode.
     # Use delegated: when docker container performs changes, host is in read only mode.
@@ -21,8 +24,8 @@ services:
     build: ./express-server
     depends_on:
       - keycloak
-    # ports:
-    #   - 3000:3000
+    ports:
+      - 3000:3000
     volumes:
       - ./express-server/src:/app/src:cached
     environment:
@@ -41,9 +44,9 @@ services:
     build: ./keycloak
     depends_on:
       - postgres
-    # ports:
-    #   - 8080:8080
-    #   - 8443:8443
+    ports:
+      - 8080:8080
+      - 8443:8443
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_USER}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
@@ -55,8 +58,8 @@ services:
       - DB_DATABASE=${POSTGRES_KEYCLOAK_DATABASE}
   postgres:
     build: ./postgres
-    # ports:
-    #   - 8080:8080
+    ports:
+      - 8080:8080
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -70,9 +73,9 @@ services:
       - POSTGRES_LOGSTASH_PASSWORD=${POSTGRES_LOGSTASH_PASSWORD}
   elasticsearch:
     build: ./elasticsearch
-    # ports:
-    #   - "9200:9200"
-    #   - "9300:9300"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     environment:
       - ELASTIC_USERNAME=$ELASTICSEARCH_USER
       - ELASTIC_PASSWORD=$ELASTICSEARCH_PASSWORD
@@ -82,8 +85,8 @@ services:
     build: ./kibana
     depends_on:
       - elasticsearch
-    # ports:
-    #   - "5601:5601"
+    ports:
+      - "5601:5601"
     environment:
       - SERVER_BASEPATH=/kibana
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
@@ -94,8 +97,8 @@ services:
     depends_on:
       - elasticsearch
       - postgres
-    # ports:
-    #   - "9600:9600"
+    ports:
+      - "9600:9600"
     environment:
       - POSTGRES_JDBC_URL=${POSTGRES_JDBC_URL}
       - POSTGRES_LOGSTASH_USER=${POSTGRES_LOGSTASH_USER}
