@@ -3,8 +3,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Create and publish a Docker image
-on: [push]
+name: Angular app - Create and publish a Docker image
+on:
+  push:
+    paths:
+      - "angular-app/**"
 
 env:
   REGISTRY: ghcr.io
@@ -38,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./angular-app
-          file: ./angular-app/dev.Dockerfile
+          file: ./angular-app/prod.Dockerfile
           # push: ${{ github.event_name != 'pull_request' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
