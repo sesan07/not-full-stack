@@ -3,16 +3,18 @@ version: "3.8"
 # TODO set up volumes for postgres to persist data?
 services:
   nginx-proxy:
-    build:
-      context: ./nginx-proxy
-      dockerfile: dev.Dockerfile
+    # build:
+    #   context: ./nginx-proxy
+    #   dockerfile: dev.Dockerfile
+    image: ghcr.io/sesan07/full-stack_nginx-proxy:main
     ports:
       - 80:80
       - 443:443
   angular-app:
-    build:
-      context: ./angular-app
-      dockerfile: dev.Dockerfile
+    # build:
+    #   context: ./angular-app
+    #   dockerfile: dev.Dockerfile
+    image: ghcr.io/sesan07/full-stack_angular-app:main
     ports:
       - 4200:4200
     volumes:
@@ -59,7 +61,7 @@ services:
   postgres:
     build: ./postgres
     ports:
-      - 8080:8080
+      - 5432:5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

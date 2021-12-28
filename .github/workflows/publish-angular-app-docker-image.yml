@@ -5,14 +5,10 @@
 
 name: Create and publish a Docker image
 on: [push]
-# on:
-#   push:
-#     paths:
-#       - "nginx-proxy/**"
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}_nginx-proxy
+  IMAGE_NAME: ${{ github.repository }}_angular-app
 
 jobs:
   build-and-push-image:
@@ -41,8 +37,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./nginx-proxy
-          file: ./nginx-proxy/dev.Dockerfile
+          context: ./angular-app
+          file: ./angular-app/dev.Dockerfile
           # push: ${{ github.event_name != 'pull_request' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
