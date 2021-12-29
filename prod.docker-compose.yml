@@ -9,10 +9,10 @@ services:
     restart: always
     image: ghcr.io/sesan07/full-stack_angular-app:main
     ports:
-      - 81:81
+      - 80:80
   express-server:
     restart: always
-    build: ./express-server
+    image: ghcr.io/sesan07/full-stack_express-server:main
     depends_on:
       - keycloak
     ports:
@@ -31,7 +31,7 @@ services:
       - PGDATABASE=${POSTGRES_DEV_DATABASE}
   keycloak:
     restart: always
-    build: ./keycloak
+    image: ghcr.io/sesan07/full-stack_keycloak:main
     depends_on:
       - postgres
     ports:

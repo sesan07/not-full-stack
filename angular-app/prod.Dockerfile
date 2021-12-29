@@ -25,5 +25,3 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built angular app
 COPY --from=build /app/dist/angular-app /usr/share/nginx/html
-
-EXPOSE 81

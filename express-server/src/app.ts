@@ -56,7 +56,7 @@ setupKeycloak().then(keycloak => {
 	app.use(morgan('dev'), keycloak.middleware(), keycloak.protect());
 
 	const pool: Pool = new Pool();
-	app.use(usersRouter(pool));
+	app.use('/api', usersRouter(pool));
 
 	// start the Express server
 	app.listen(port, () => {
