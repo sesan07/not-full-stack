@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-app-deployment
+  labels:
+    service: angular-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: angular-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: angular-app
+    spec:
+      containers:
+        - name: angular-app
+          image: full-stack_angular-app:0.0.10
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-app-service
+spec:
+  selector:
+    service: angular-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

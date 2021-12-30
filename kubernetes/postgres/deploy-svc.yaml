@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  labels:
+    service: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: postgres
+  # strategy:
+  #   type: Recreate
+  template:
+    metadata:
+      labels:
+        service: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: ghcr.io/sesan07/full-stack_postgres:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-password
+            - name: POSTGRES_DEV_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dev-user
+            - name: POSTGRES_DEV_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dev-password
+            - name: POSTGRES_DEV_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: dev-database
+            - name: POSTGRES_KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: keycloak-user
+            - name: POSTGRES_KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: keycloak-password
+            - name: POSTGRES_KEYCLOAK_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: keycloak-database
+            - name: POSTGRES_LOGSTASH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: logstash-user
+            - name: POSTGRES_LOGSTASH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: logstash-password
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    service: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+status:
+  loadBalancer: {}

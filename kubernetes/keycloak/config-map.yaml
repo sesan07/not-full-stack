@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-congfig-map
+data:
+  keycloak-import: /tmp/realm-import.json
+  url: http://keycloak-service:8080/auth
+  external-url: http://localhost/auth
+  db-vendor: postgres

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-deployment
+  labels:
+    service: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: keycloak
+  # strategy:
+  #   type: Recreate
+  template:
+    metadata:
+      labels:
+        service: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: ghcr.io/sesan07/full-stack_keycloak:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+          env:
+            - name: DB_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: host-name
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: keycloak-database
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: keycloak-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: keycloak-password
+            - name: DB_VENDOR
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-congfig-map
+                  key: db-vendor
+            - name: KEYCLOAK_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-congfig-map
+                  key: keycloak-import
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: keycloak-user
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: keycloak-password
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-service
+spec:
+  selector:
+    service: keycloak
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    - name: "8443"
+      port: 8443
+      targetPort: 8443
+status:
+  loadBalancer: {}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-congfig-map
+data:
+  dev-database: full_stack
+  keycloak-database: keycloak
+  host-name: postgres-service
+  port: '5432'

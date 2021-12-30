@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-server-deployment
+  labels:
+    service: express-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: express-server
+  # strategy:
+  #   type: Recreate
+  template:
+    metadata:
+      labels:
+        service: express-server
+    spec:
+      containers:
+        - name: express-server
+          image: full-stack_express-server:0.0.2
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REALM
+              valueFrom:
+                configMapKeyRef:
+                  name: express-server-congfig-map
+                  key: realm
+            - name: CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: express-server-congfig-map
+                  key: client-id
+            - name: KEYCLOAK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-congfig-map
+                  key: url
+            - name: KEYCLOAK_EXTERNAL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-congfig-map
+                  key: external-url
+            - name: BEARER_ONLY
+              valueFrom:
+                configMapKeyRef:
+                  name: express-server-congfig-map
+                  key: bearer-only
+            - name: VERIFY_TOKEN_AUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: express-server-congfig-map
+                  key: verify-token-audience
+            - name: PGHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: host-name
+            - name: PGPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: port
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dev-user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dev-password
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-congfig-map
+                  key: dev-database
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-server-service
+spec:
+  selector:
+    service: express-server
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+status:
+  loadBalancer: {}
