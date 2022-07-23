@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { mergeMap, takeUntil } from 'rxjs/operators';
 import { UserManagementService } from './user-management.service';
@@ -27,7 +27,7 @@ export class UserManagementComponent implements OnInit {
 		email: ['', Validators.required]
 	  });
 
-	constructor(private _userService: UserManagementService, private _fb: FormBuilder) { }
+	constructor(private _userService: UserManagementService, private _fb: UntypedFormBuilder) { }
 
 	ngOnInit(): void {
 		this._userService.getUsers(0, this._pageSize)
