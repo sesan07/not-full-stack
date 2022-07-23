@@ -8,9 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install any needed packages
-RUN npm i
-
-EXPOSE 3000
+RUN npm ci
 
 # Specify that the default command should be npm start
 CMD [ "npm", "run", "start:dev" ]

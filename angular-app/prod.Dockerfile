@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 
 # Install any needed packages
-RUN npm i
+RUN npm ci
 
 # Build
 RUN npm run build:prod

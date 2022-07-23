@@ -8,9 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install any needed packages
-RUN npm i
-
-# EXPOSE 4200
+RUN npm ci
 
 # TODO use entrypoint instead
 # Specify that the default command should be npm start
